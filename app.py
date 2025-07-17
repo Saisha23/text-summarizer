@@ -1,18 +1,25 @@
 from transformers import pipeline
 
-# Create a summarizer pipeline
+# Initialize the summarizer
 summarizer = pipeline("summarization")
 
-# Sample input text
-text = """
-Artificial Intelligence and Data Science is a fast-growing field with applications in every industry. 
-From healthcare to finance, AI models are being used to improve efficiency and make data-driven decisions. 
-Students in AI & DS learn to use tools like machine learning, natural language processing, and deep learning to build smart applications.
-"""
+# Read from input.txt
+try:
+    with open("input.txt", "r", encoding="utf-8") as f:
+        text = f.read()
 
-# Generate summary
-summary = summarizer(text, max_length=50, min_length=25, do_sample=False)
+    if text.strip():
+        # Generate summary
+        summary = summarizer(text, max_length=50, min_length=25, do_sample=False)
 
-# Print summary
-print("🔍 Summary:")
-print(summary[0]['summary_text'])
+        # Save to summary.txt
+        with open("summary.txt", "w", encoding="utf-8") as f:
+            f.write(summary[0]['summary_text'])
+
+        print("✅ Summary written to summary.txt")
+
+    else:
+        print("⚠️ input.txt is empty.")
+
+except FileNotFoundError:
+    print("❌ input.txt not found. Please create it with content to summarize.")
